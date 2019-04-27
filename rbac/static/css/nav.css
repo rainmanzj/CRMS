@@ -1,7 +1,7 @@
 .nav {
     min-width: 980px;
     height: 48px;
-    background-color: #2F72AB;
+    background-color: #0e3658;
     color: #ffffff;
     line-height: 48px;
     overflow: visible;
@@ -13,7 +13,7 @@
     overflow: hidden;
     height: 48px;
     text-align: center;
-    background-color: #1c5a9c;
+    background-color: #114570;
 }
 
 .nav .logo-area > a {

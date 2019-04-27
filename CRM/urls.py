@@ -16,8 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from startX.serivce.v1 import site
+from generic import views
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('start/', site.urls)
+    path('start/', site.urls),
+    path('login/', views.login),
+    path('logout/', views.logout),
+    path('index/', views.index),
 ]

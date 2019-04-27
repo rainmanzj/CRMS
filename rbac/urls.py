@@ -1,10 +1,11 @@
 from django.urls import re_path
-from rbac.views import role,user,menu
+from rbac.views import role, user, menu
+
 urlpatterns = [
-    re_path(r'^role/list/$',role.role_list,name='role_list'),
-    re_path(r'^role/add/$',role.role_add,name='role_add'),
-    re_path(r'^role/edit/(?P<id>\d+)/$',role.role_edit,name='role_edit'),
-    re_path(r'^role/del/(?P<id>\d+)/$',role.role_del,name='role_del'),
+    re_path(r'^role/list/$', role.role_list, name='role_list'),
+    re_path(r'^role/add/$', role.role_add, name='role_add'),
+    re_path(r'^role/edit/(?P<id>\d+)/$', role.role_edit, name='role_edit'),
+    re_path(r'^role/del/(?P<id>\d+)/$', role.role_del, name='role_del'),
 
     # re_path(r'^user/list/$',user.user_list,name='user_list'),
     # re_path(r'^user/add/$',user.user_add,name='user_add'),
@@ -28,7 +29,5 @@ urlpatterns = [
     re_path(r'^multi/permission/$', menu.multi_permission, name='multi_permission'),
     re_path(r'^multi/permission/del/(?P<id>\d+)/$', menu.multi_permission_del, name='multi_permission_del'),
     re_path(r'^distribute/permission/$', menu.distribute_permission, name='distribute_permission'),
-
-
 
 ]

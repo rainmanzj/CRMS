@@ -10,10 +10,8 @@ from django.db.models import Q
 from django.db.models import ForeignKey, ManyToManyField
 
 
-
 def get_field_display(field_title, field):
     """
-
     :param field_title: 数据库表字段希望显示的表头
     :param field: 数据库表字段
     :return:
@@ -23,6 +21,41 @@ def get_field_display(field_title, field):
         if is_header:
             return field_title
         return getattr(model, 'get_%s_display' % field)
+
+    return inner
+
+
+def get_datetime_format(field_title, field, time_format='%Y-%m-%d'):
+    """
+    :param field_title: 日期时间格式的格式化显示
+    :param field: 数据库表字段
+    :param time_format: 格式
+    :return:
+    """
+
+    def inner(self, model=None, is_header=None):
+        if is_header:
+            return field_title
+        datetime_format = getattr(model, field)
+        return datetime_format.strftime(time_format)
+
+    return inner
+
+
+def get_m2m_display(field_title, field):
+    """
+    :param field_title: 显示manytomany字段的数据
+    :param field: 数据库表字段
+    :param time_format: 格式
+    :return:
+    """
+
+    def inner(self, model=None, is_header=None):
+        if is_header:
+            return field_title
+        query = getattr(model, field).all()
+        m2m_value = [str(row) for row in query]
+        return ','.join(m2m_value)
 
     return inner
 
@@ -43,7 +76,7 @@ class SearchGroupRow(object):
 
     def __iter__(self):
         yield '<div class="whole">'
-        yield self.title
+        yield self.title + ':'
         yield '</div>'
         yield '<div class="others">'
         total_query_dict = self.query_dict.copy()
@@ -327,9 +360,7 @@ class StartXHandler(object):
 
     def reverse_commons_url(self, name, *args, **kwargs):
         name = "%s:%s" % (self.site.namespace, name,)
-        print(name)
         base_url = reverse(name, args=args, kwargs=kwargs)
-        print(base_url)
         if not self.request.GET:
             add_url = base_url
         else:
@@ -386,6 +417,16 @@ class StartXHandler(object):
 
         return inner
 
+    def get_model_queryset(self, request, *args, **kwargs):
+        """
+        获取数据表对象，预留的钩子函数，子类可以重定义
+        :param reqeust:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        return self.model_class.objects
+
     def changelist(self, request, *args, **kwargs):
         """
 
@@ -418,7 +459,10 @@ class StartXHandler(object):
         order_by_field = self.get_order_by()
         # ########## 4. 组合搜索结果 ##########
         search_group_condition = self.get_search_group_condition(request)
-        querySet = self.model_class.objects.filter(conn).filter(**search_group_condition).order_by(*order_by_field)
+
+        current_queryset = self.get_model_queryset(request, *args, **kwargs)
+
+        querySet = current_queryset.filter(conn).filter(**search_group_condition).order_by(*order_by_field)
 
         # ########## 5. 处理分页 ##########
         all_count = querySet.count()
