@@ -9,8 +9,11 @@
                     {{ row.note }}
                 </div>
                 <div class="panel-footer">
-                    <div style="display: inline-block;">跟进人：{{ row.consultant }}</div>
-                    <div style="display: inline-block;">跟进日期: {{ row.date|date:"Y-m-d" }}</div>
+                    <div style="display: inline-block;"><i class="fa fa-user-o"
+                                                           aria-hidden="true"></i>跟进人：{{ row.consultant }}</div>
+                    <div style="display: inline-block;"><i class="fa fa-clock-o"
+                                                           aria-hidden="true"></i>跟进日期: {{ row.date|date:"Y-m-d" }}
+                    </div>
                 </div>
 
             </div>

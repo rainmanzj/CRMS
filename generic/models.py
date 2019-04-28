@@ -163,6 +163,58 @@ class ConsultRecord(models.Model):
     """
     customer = models.ForeignKey(verbose_name='所咨询客户', to='Customer', on_delete='cascade')
     consultant = models.ForeignKey(verbose_name='跟进人', to='Staffinfo', on_delete='cascade',
-                                   limit_choices_to={'customer__depart__title': ['销售部', '运营部']})
+                                   limit_choices_to={'depart__title__in': ['销售部', '运营部']})
     note = models.TextField(verbose_name='跟进内容')
     date = models.DateField(verbose_name='跟进日期', auto_now_add=True)
+
+
+class PaymentRecord(models.Model):
+    """
+    缴费申请
+    """
+    customer = models.ForeignKey(to='Customer', verbose_name="客户", on_delete='cascade')
+    consultant = models.ForeignKey(verbose_name="课程顾问", to='Staffinfo', help_text="谁签的单就选谁", on_delete='cascade')
+    pay_type_choices = [
+        (1, "报名费"),
+        (2, "学费"),
+        (3, "退学"),
+        (4, "其他"),
+    ]
+    pay_type = models.IntegerField(verbose_name="费用类型", choices=pay_type_choices, default=1)
+    paid_fee = models.IntegerField(verbose_name="金额", default=0)
+    classes = models.ForeignKey(verbose_name="申请班级", to="Classes", on_delete='cascade')
+    apply_date = models.DateTimeField(verbose_name="申请日期", auto_now_add=True)
+
+    confirm_status_choices = (
+        (1, '申请中'),
+        (2, '已确认'),
+        (3, '已驳回'),
+    )
+    confirm_status = models.IntegerField(verbose_name="确认状态", choices=confirm_status_choices, default=1)
+    confirm_date = models.DateTimeField(verbose_name="确认日期", null=True, blank=True)
+    confirm_user = models.ForeignKey(verbose_name="审批人", to='Staffinfo', related_name='confirms', on_delete='cascade',
+                                     null=True, blank=True)
+
+    note = models.TextField(verbose_name="备注", blank=True, null=True)
+
+
+class Student(models.Model):
+    """
+    学生表
+    """
+    customer = models.OneToOneField(verbose_name='客户信息', to='Customer', on_delete='cascade')
+    qq = models.CharField(verbose_name='QQ号', max_length=32)
+    mobile = models.CharField(verbose_name='手机号', max_length=32)
+    emergency_contract = models.CharField(verbose_name='紧急联系人电话', max_length=32)
+    class_list = models.ManyToManyField(verbose_name="已报班级", to='Classes', blank=True)
+    student_status_choices = [
+        (1, "申请中"),
+        (2, "在读"),
+        (3, "毕业"),
+        (4, "退学")
+    ]
+    student_status = models.IntegerField(verbose_name="学员状态", choices=student_status_choices, default=1)
+    memo = models.CharField(verbose_name='备注', max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return self.customer.name

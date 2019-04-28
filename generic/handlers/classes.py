@@ -17,7 +17,7 @@ class ClassesModelForm(StartXModelForm):
 class ClassesHandler(StartXHandler):
     model_form_class = ClassesModelForm
 
-    def display_course(self, model=None, is_header=None):
+    def display_course(self, model=None, is_header=None, *args, **kwargs):
         if is_header:
             return '班级'
         return '%s(%s期)' % (model.course.name, model.semester)

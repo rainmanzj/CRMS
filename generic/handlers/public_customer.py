@@ -19,7 +19,7 @@ class PublicCustomerHandler(StartXHandler):
     def get_model_queryset(self, reqeust, *args, **kwargs):
         return self.model_class.objects.filter(consultant__isnull=True)
 
-    def display_record(self, model=None, is_header=None):
+    def display_record(self, model=None, is_header=None, *args, **kwargs):
         if is_header:
             return '跟进记录'
         record_url = self.reverse_commons_url(self.get_url_name('record'), pk=model.pk)

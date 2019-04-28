@@ -60,7 +60,7 @@ class StaffHandler(StartXHandler):
         Option('depart'),
     ]
 
-    def display_reset_pwd(self, model=None, is_header=None):
+    def display_reset_pwd(self, model=None, is_header=None, *args, **kwargs):
         """
         重置密码组件
         :param obj:
