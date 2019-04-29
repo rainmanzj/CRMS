@@ -1,4 +1,4 @@
-from startX.serivce.v1 import StartXHandler, StartXModelForm
+from startX.serivce.v1 import StartXHandler, StartXModelForm, get_m2m_display
 from startX.serivce.v1 import get_field_display, Option, StarkForm
 from generic import models
 from django import forms
@@ -7,14 +7,20 @@ from utils.md5 import gen_md5
 from django.shortcuts import HttpResponse, render, redirect
 from django.urls import re_path
 from django.utils.safestring import mark_safe
+from .base_promission import PermissionHandler
 
 
 class StaffAddForm(StartXModelForm):
-    confirm_password = forms.CharField(label='确认密码')
+    confirm_password = forms.CharField(label='确认密码', widget=forms.PasswordInput)
 
     class Meta:
         model = models.Staffinfo
-        fields = ['username', 'realname', 'password', 'confirm_password', 'gender', 'email', 'phone', 'depart', 'roles']
+        fields = ['username', 'realname', 'password', 'confirm_password', 'gender', 'email', 'phone', 'depart',
+                  'roles']
+        widgets = {
+            'password': forms.PasswordInput,
+
+        }
 
     def clean_confirm_password(self):
         password = self.cleaned_data['password']
@@ -53,7 +59,7 @@ class StaffChangeModelForm(StartXModelForm):
         fields = ['username', 'realname', 'gender', 'email', 'phone', 'depart', 'roles']
 
 
-class StaffHandler(StartXHandler):
+class StaffHandler(PermissionHandler, StartXHandler):
     search_list = ['username__contains', 'realname__contains']
     search_group = [
         Option('gender', is_multi=True),
@@ -75,7 +81,7 @@ class StaffHandler(StartXHandler):
     list_display = ['username', 'realname', get_field_display('性别', 'gender'), 'email', 'phone', 'depart', 'roles',
                     display_reset_pwd]
 
-    def get_model_form(self, is_add=False):
+    def get_model_form(self, is_add=False, *args, **kwargs):
         if is_add:
             return StaffAddForm
         return StaffChangeModelForm

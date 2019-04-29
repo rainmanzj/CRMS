@@ -65,7 +65,7 @@ class Classes(models.Model):
     memo = models.TextField(verbose_name='说明', null=True, blank=True)
 
     def __str__(self):
-        return '%s(%s)' % (self.course.name, self.semester)
+        return '%s(%s期)' % (self.course.name, self.semester)
 
 
 class Customer(models.Model):
@@ -206,7 +206,7 @@ class Student(models.Model):
     qq = models.CharField(verbose_name='QQ号', max_length=32)
     mobile = models.CharField(verbose_name='手机号', max_length=32)
     emergency_contract = models.CharField(verbose_name='紧急联系人电话', max_length=32)
-    class_list = models.ManyToManyField(verbose_name="已报班级", to='Classes', blank=True)
+    classes = models.ManyToManyField(verbose_name="已报班级", to='Classes', blank=True)
     student_status_choices = [
         (1, "申请中"),
         (2, "在读"),
@@ -214,7 +214,69 @@ class Student(models.Model):
         (4, "退学")
     ]
     student_status = models.IntegerField(verbose_name="学员状态", choices=student_status_choices, default=1)
-    memo = models.CharField(verbose_name='备注', max_length=255, blank=True, null=True)
+    score = models.IntegerField(verbose_name='积分', default=100)
+    memo = models.TextField(verbose_name='备注', max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.customer.name
+
+
+class ScoreRecord(models.Model):
+    """
+    积分记录
+    """
+    student = models.ForeignKey(verbose_name='学生', to='Student', on_delete='cascade')
+    content = models.TextField(verbose_name='理由')
+    score = models.IntegerField(verbose_name='分值', help_text='违纪扣分写负值，表现邮寄加分写正值')
+    user = models.ForeignKey(verbose_name='执行人', to='Staffinfo', on_delete='cascade')
+
+
+class CourseRecord(models.Model):
+    """
+    上课记录表
+    """
+    class_object = models.ForeignKey(verbose_name="班级", to="Classes", on_delete='cascade')
+    day_num = models.IntegerField(verbose_name="节次")
+    teacher = models.ForeignKey(verbose_name="讲师", to='Staffinfo', on_delete='cascade')
+    date = models.DateField(verbose_name="上课日期", auto_now_add=True)
+
+    def __str__(self):
+        return "{0} day{1}".format(self.class_object, self.day_num)
+
+
+class StudyRecord(models.Model):
+    """
+    学生考勤记录
+    """
+    course_record = models.ForeignKey(verbose_name="第几天课程", to="CourseRecord", on_delete='cascade')
+    student = models.ForeignKey(verbose_name="学员", to='Student', on_delete='cascade')
+    record_choices = (
+        ('checked', "已签到"),
+        ('vacate', "请假"),
+        ('late', "迟到"),
+        ('noshow', "缺勤"),
+        ('leave_early', "早退"),
+    )
+    record = models.CharField("上课纪录", choices=record_choices, default="checked", max_length=64)
+    homework = models.ForeignKey(verbose_name='作业完成情况', to='Homework', on_delete='cascade', null=True, blank=True)
+
+
+class Homework(models.Model):
+    """
+    作业情况
+    """
+    student = models.ForeignKey(verbose_name='学生', to='Student', on_delete='cascade')
+    classes = models.ForeignKey(verbose_name='班级', to='Classes', on_delete='cascade')
+    courses = models.ForeignKey(verbose_name='课程', to='Course', on_delete='cascade')
+    teacher = models.ForeignKey(verbose_name='讲师', to='Staffinfo', on_delete='cascade')
+    content = models.TextField(verbose_name='作业内容', null=True, blank=True)
+    work_status_choices = [
+        (1, "作业未发布"),
+        (2, "学生未提交"),
+        (3, "讲师未批改"),
+        (4, "讲师已批改-合格"),
+        (5, "讲师已批改-不合格")
+    ]
+    status = models.IntegerField(choices=work_status_choices, default=1)
+    file = models.FileField(upload_to='homework/%Y/%m/%d/', null=True, blank=True)
+    critic = models.TextField(verbose_name='作业批语', null=True, blank=True)

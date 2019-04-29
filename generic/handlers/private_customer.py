@@ -1,8 +1,8 @@
 from startX.serivce.v1 import StartXHandler, get_field_display, get_m2m_display, StartXModelForm
-from django.shortcuts import HttpResponse, render
-from django.urls import re_path, reverse
+from django.urls import reverse
 from generic import models
 from django.utils.safestring import mark_safe
+from .base_promission import PermissionHandler
 
 
 class PrivateModelForm(StartXModelForm):
@@ -11,7 +11,7 @@ class PrivateModelForm(StartXModelForm):
         exclude = ['consultant']
 
 
-class PrivateCustomerHandler(StartXHandler):
+class PrivateCustomerHandler(PermissionHandler, StartXHandler):
     """
     私户设置
     """
@@ -42,6 +42,8 @@ class PrivateCustomerHandler(StartXHandler):
 
         self.model_class.objects.filter(consultant_id=current_consultant_id, id__in=pk_list).update(consultant=None)
 
+    action_multi_remove.text = "移除到公户"
+
     def save(self, request, form, is_update, *args, **kwargs):
         """
         添加数据时，重写save方法，直接保存到当前用户的私户里
@@ -56,8 +58,6 @@ class PrivateCustomerHandler(StartXHandler):
             current_consultant_id = request.session['staffinfo']['staff_id']
             form.instance.consultant_id = current_consultant_id
         form.save()
-
-    action_multi_remove.text = "移除到公户"
 
     action_list = [action_multi_remove, ]
 

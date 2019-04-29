@@ -3,6 +3,7 @@
 from django.shortcuts import redirect, render
 from generic.models import Staffinfo
 from utils.md5 import gen_md5
+from rbac.service.init_permission import init_permission
 
 
 def login(request):
@@ -17,6 +18,9 @@ def login(request):
         return render(request, 'login.html', {'error': '用户名或密码错误'})
 
     request.session['staffinfo'] = {'staff_id': current_user.id, 'realname': current_user.realname}
+    # 用户权限信息的初始化
+    init_permission(current_user, request)
+
     return redirect('/index/')
 
 

@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{% static 'startX/plugins/font-awesome/css/font-awesome.css' %} "/>
     <link rel="stylesheet" href="{% static 'startX/css/commons.css' %} "/>
     <link rel="stylesheet" href="{% static 'startX/css/nav.css' %} "/>
+    <link rel="stylesheet" href="{% static 'rbac/css/rbac.css' %} "/>
     <style>
         body {
             margin: 0;
@@ -93,7 +94,7 @@
         }
     </style>
     {% block css %}
-    
+
     {% endblock %}
 </head>
 <body>
@@ -159,7 +160,7 @@
     <div class="left-menu">
         <div class="menu-body">
             <div class="static-menu">
-{#                动态菜单#}
+                {#                动态菜单#}
                 {% menu request %}
             </div>
 
@@ -168,7 +169,7 @@
     <div class="right-body">
         <div>
             <ol class="breadcrumb no-radius no-margin" style="border-bottom: 1px solid #ddd;">
-{#                路径导航#}
+                {#                路径导航#}
                 {% url_navigation request %}
             </ol>
         </div>

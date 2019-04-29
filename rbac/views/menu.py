@@ -8,6 +8,7 @@ from collections import OrderedDict
 from django.utils.module_loading import import_string
 from django.conf import settings
 
+
 def menu_list(request):
     """
     菜单列表
@@ -228,7 +229,7 @@ def multi_permission(request):
         formset = generate_formset_class(data=request.POST)
         if formset.is_valid():
             object_list = []
-            post_row_list = formset.cleaned_data    # 临时存储正确数据
+            post_row_list = formset.cleaned_data  # 临时存储正确数据
             has_error = False
             for i in range(formset.total_form_count()):
                 row_dict = post_row_list[i]
@@ -240,7 +241,7 @@ def multi_permission(request):
                     formset.errors[i].update(e)
                     generate_formset = formset
                     has_error = True
-            if not has_error:   # 没有错的话，多个数据同时添加
+            if not has_error:  # 没有错的话，多个数据同时添加
                 models.Permission.objects.bulk_create(object_list, batch_size=100)
         else:
             generate_formset = formset
@@ -351,7 +352,7 @@ def distribute_permission(request):
     """
 
     user_id = request.GET.get('uid')
-    user_class = import_string(settings.BUSINESS_MODEL_CLASS)
+    user_class = import_string(settings.RBAC_USER_MODLE_CLASS)
     user_object = user_class.objects.filter(id=user_id).first()
     if not user_object:
         user_id = None

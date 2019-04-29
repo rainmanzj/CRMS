@@ -14,10 +14,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path, include
 from startX.serivce.v1 import site
 from generic import views
-
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,4 +24,5 @@ urlpatterns = [
     path('login/', views.login),
     path('logout/', views.logout),
     path('index/', views.index),
+    re_path(r'^rbac/', include(('rbac.urls', 'rbac'))),
 ]

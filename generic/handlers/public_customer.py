@@ -5,6 +5,7 @@ from django.utils.safestring import mark_safe
 from django.urls import re_path
 from django.shortcuts import HttpResponse, render
 from django.db import transaction
+from .base_promission import PermissionHandler
 
 
 class PublicModelForm(StartXModelForm):
@@ -13,7 +14,7 @@ class PublicModelForm(StartXModelForm):
         exclude = ['consultant']
 
 
-class PublicCustomerHandler(StartXHandler):
+class PublicCustomerHandler(PermissionHandler, StartXHandler):
     """公户设置"""
 
     def get_model_queryset(self, reqeust, *args, **kwargs):

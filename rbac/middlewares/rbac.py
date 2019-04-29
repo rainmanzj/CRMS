@@ -32,7 +32,7 @@ class RbacMiddleware(MiddlewareMixin):
             if re.match(url,request.path_info):
                 # 需要登录，但无需权限检验
                 request.current_menu_selected = 0
-                request.url_navigation = 0
+                request.url_navigation = url_navigation
                 return None
 
         flag = False

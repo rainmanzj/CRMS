@@ -3,6 +3,7 @@ from django.urls import re_path
 from generic import models
 from django.shortcuts import HttpResponse
 from django.utils.safestring import mark_safe
+from .base_promission import PermissionHandler
 
 
 class ConsultRecordModelForm(StartXModelForm):
@@ -11,7 +12,7 @@ class ConsultRecordModelForm(StartXModelForm):
         fields = ['note', ]
 
 
-class ConsultRecordHandler(StartXHandler):
+class ConsultRecordHandler(PermissionHandler,StartXHandler):
     list_display = ['note', 'consultant', 'date']
     list_template = 'consult_record.html'
     model_form_class = ConsultRecordModelForm
