@@ -14,6 +14,7 @@ from generic.handlers.student import StudentHandler
 from generic.handlers.score_record import ScoreRecordHandler
 from generic.handlers.course_record import CourseRecordHandler
 from generic.handlers.homework import HomeworkHandler
+from generic.handlers.homework_detail import HomeworkDetailHandler
 
 site.register(models.School, SchoolHandler)
 site.register(models.DepartMent, DepartMentHandler)
@@ -29,3 +30,4 @@ site.register(models.Student, StudentHandler)
 site.register(models.ScoreRecord, ScoreRecordHandler)
 site.register(models.CourseRecord, CourseRecordHandler)
 site.register(models.Homework, HomeworkHandler)
+site.register(models.HomeworkDetail, HomeworkDetailHandler)

@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class="XXX-container">
+        <div>
+            <h3>作业内容：</h3>
+            <div class="homework">
+                {{ work|linebreaksbr }}
+            </div>
+        </div>
+
+        <div class="upload">
+            <h3>提交作业:</h3>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input type="file" id="File" name="file">
+
+                </div>
+                <button type="submit" class="btn btn-info">提交</button>
+                {{ msg }}
+            </form>
+        </div>
+
+    </div>
+{% endblock %}

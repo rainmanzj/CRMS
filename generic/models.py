@@ -216,6 +216,8 @@ class Student(models.Model):
     student_status = models.IntegerField(verbose_name="学员状态", choices=student_status_choices, default=1)
     score = models.IntegerField(verbose_name='积分', default=100)
     memo = models.TextField(verbose_name='备注', max_length=255, blank=True, null=True)
+    users = models.ForeignKey(verbose_name='用户', to='Staffinfo', on_delete='cascade'
+                              , help_text='这个字段是当客户成功报名后获得的属性', null=True, blank=True)
 
     def __str__(self):
         return self.customer.name
@@ -265,11 +267,18 @@ class Homework(models.Model):
     """
     作业情况
     """
-    student = models.ForeignKey(verbose_name='学生', to='Student', on_delete='cascade')
     classes = models.ForeignKey(verbose_name='班级', to='Classes', on_delete='cascade')
     courses = models.ForeignKey(verbose_name='课程', to='Course', on_delete='cascade')
     teacher = models.ForeignKey(verbose_name='讲师', to='Staffinfo', on_delete='cascade')
     content = models.TextField(verbose_name='作业内容', null=True, blank=True)
+
+
+class HomeworkDetail(models.Model):
+    """
+    作业详情
+    """
+    homework = models.ForeignKey(verbose_name='作业', to='Homework', on_delete='cascade')
+    student = models.ManyToManyField(verbose_name='学生', to='Student', blank=True)
     work_status_choices = [
         (1, "作业未发布"),
         (2, "学生未提交"),
@@ -277,6 +286,6 @@ class Homework(models.Model):
         (4, "讲师已批改-合格"),
         (5, "讲师已批改-不合格")
     ]
-    status = models.IntegerField(choices=work_status_choices, default=1)
-    file = models.FileField(upload_to='homework/%Y/%m/%d/', null=True, blank=True)
+    status = models.IntegerField(choices=work_status_choices, default=2)
+    file = models.FileField(upload_to='homework/%Y-%m-%d/', null=True, blank=True, verbose_name='作业文件')
     critic = models.TextField(verbose_name='作业批语', null=True, blank=True)

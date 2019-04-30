@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
+from generic import models
 
 
 class PermissionHandler(object):
@@ -31,6 +32,20 @@ class PermissionHandler(object):
             elif has_namespace(self, self.get_del_name) in permission_dict:
                 value.append(type(self).display_del)
         return value
+
+    def get_action_list(self, request, *args, **kwargs):
+        """
+        批量操作按钮判定权限
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        user_obj_id = request.session['staffinfo']['staff_id']
+        user_obj = models.Staffinfo.objects.filter(id=user_obj_id).first()
+        if str(user_obj.depart) == '学员部':
+            return None
+        return type(self).action_list
 
 
 def has_namespace(obj, func):

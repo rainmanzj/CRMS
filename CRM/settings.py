@@ -118,6 +118,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+MEDIA_URL = "media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
 # ########## 权限配置 ########
 RBAC_USER_MODLE_CLASS = "generic.models.Staffinfo"
 AUTO_DISCOVER_EXCLUDE = [
@@ -125,17 +128,24 @@ AUTO_DISCOVER_EXCLUDE = [
     '/login/',
     '/logout/',
     '/index/',
+    '/media/.*'
 ]
 
 NO_PERMISSION_LIST = [
     '/index/',
     '/logout/',
+    '/media/.*'
 ]
 
 VALID_URL = [
     '/login/',
-    '/admin/.*'
+    '/logout/',
+    '/admin/.*',
+    '/media/.*'
 ]
 
 INIT_PERMISSION = "XXX_permission_url_list_key"
 INIT_MENU = "XXX_permission_menu_key"
+
+# ############ 作业文件 ####
+BASE_FILE = 'http://127.0.0.1:8000/media/'
