@@ -1,5 +1,5 @@
 
-#CRM客户关系管理系统
+# CRM客户关系管理系统
 
 
 基于学员，讲师，销售，运营等不同的角色开发而成的客户关系系统
@@ -66,6 +66,10 @@
 * 账号名可在数据库里查看
 
 ## 启动项目
+
+## 程序流程图
+
+* http://naotu.baidu.com/file/9a523a85cb424db52788019b156fb910?token=c05f21d9d79d01f9
 
 ```python
   Python manage.py runserver XXXX(您的ip和端口)
