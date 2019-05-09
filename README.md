@@ -86,11 +86,7 @@
 
 ![账单列表](https://raw.githubusercontent.com/yang-va/pictures/master/23.png)
 
-![账单报表](https://raw.githubusercontent.com/yang-va/pictures/master/24.png)
-
 ![用户列表](https://raw.githubusercontent.com/yang-va/pictures/master/25.png)
-
-![注册用户分析](https://raw.githubusercontent.com/yang-va/pictures/master/26.png)
 
 ![角色列表](https://raw.githubusercontent.com/yang-va/pictures/master/27.png)
 
